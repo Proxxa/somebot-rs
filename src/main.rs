@@ -12,7 +12,11 @@ async fn poise(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> Shuttle
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![commands::hello(), commands::ping()],
+            commands: vec![commands::hello(), commands::ping(), {
+                let mut com = commands::_8ball();
+                com.name = String::from("8ball");
+                com
+            }],
             ..Default::default()
         })
         .token(discord_token)

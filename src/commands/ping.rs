@@ -2,7 +2,7 @@ use std::time::Instant;
 
 use crate::prelude::*;
 
-///
+/// A command for measuring response latency.
 #[poise::command(slash_command)]
 pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
     let start = Instant::now();
@@ -18,7 +18,7 @@ pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
             embed
                 .title("Pong!")
                 .color((0, 255, 0))
-                .description(format!("**REST**: `{}ms`", elapsed.as_millis()))
+                .description(format!("**Response** latency: `{}ms`", elapsed.as_millis()))
         })
     })
     .await?;
