@@ -1,0 +1,4 @@
+TERMS OF SERVICE
+
+By using Some Bot, you acknowledge that you shouldn't try to DoS, DDoS, or
+otherwise harm the bot in any way.

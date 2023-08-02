@@ -1,10 +1,13 @@
 pub(crate) mod commands;
 pub mod prelude;
+mod routes;
+
+use rocket::routes;
 
 use crate::prelude::*;
 
 #[shuttle_runtime::main]
-async fn poise(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> ShuttlePoise<Data, Error> {
+async fn init(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> Result<PoiseRocketService, shuttle_runtime::Error> {
     // Get the discord token set in `Secrets.toml`
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
@@ -26,10 +29,14 @@ async fn poise(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> Shuttle
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
                 Ok(Data {})
             })
-        })
-        .build()
-        .await
-        .map_err(shuttle_runtime::CustomError::new)?;
+        });
 
-    Ok(framework.into())
+    let rocket: shuttle_rocket::RocketService = rocket::build()
+        .mount("/", routes![routes::index, routes::tos, routes::privacy_policy])
+        .into();
+
+    Ok(PoiseRocketService {
+        poise: framework,
+        rocket,
+    })
 }
