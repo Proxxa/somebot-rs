@@ -9,6 +9,8 @@ pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
 
     let rh = ctx.send(|reply| reply.content("Pinging...")).await?;
 
+    // To you unfortunate souls who see this:
+    // It's literally just waiting for Discord to say "yep! you responded."
     rh.message().await?;
 
     let elapsed = Instant::now().duration_since(start);
