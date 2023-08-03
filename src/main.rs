@@ -2,7 +2,10 @@ pub(crate) mod commands;
 pub mod prelude;
 mod routes;
 
-use rocket::{routes, fs::{FileServer, Options}};
+use rocket::{
+    fs::{FileServer, Options},
+    routes,
+};
 use std::path::PathBuf;
 
 use crate::prelude::*;
@@ -38,8 +41,14 @@ async fn init(
     println!("\n\n\n{}\n\n\n", static_folder.display());
 
     let rocket: shuttle_rocket::RocketService = rocket::build()
-        .mount("/tos", FileServer::new(static_folder.join("tos.txt"), Options::IndexFile))
-        .mount("/privacy", FileServer::new(static_folder.join("privacy_policy.txt"), Options::IndexFile))
+        .mount(
+            "/tos",
+            FileServer::new(static_folder.join("tos.txt"), Options::IndexFile),
+        )
+        .mount(
+            "/privacy",
+            FileServer::new(static_folder.join("privacy_policy.txt"), Options::IndexFile),
+        )
         .mount("/", routes![routes::index])
         .into();
 
