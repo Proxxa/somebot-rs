@@ -1,4 +1,10 @@
 TERMS OF SERVICE
 
-By using Some Bot, you acknowledge that you shouldn't try to DoS, DDoS, or
-otherwise harm the bot in any way.
+All use of Some Bot is permitted within legal boundaries except in the following
+prohibited use cases:
+
+    1.  Users shall not attempt to inhibit the operations of the application by
+        DoSing, DDoSing, or otherwise overloading server bandwidth.
+    2.  Users shall not use the application to harass or otherwise annoy otherwise
+        users. Doing so may result in exclusion from application services where
+        possible.

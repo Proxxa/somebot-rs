@@ -2,3 +2,6 @@ Some Bot and its beta version, Beta Bot currently do not collect data about its 
 
 Whenever errors occur, error data is not logged. Instead, we ask that you contact us via Discord (@yorip)
 with instructions on how to reproduce this error.
+
+This privacy policy may be subject to change, especially in the event that erroneous behavior
+becomes common or services which require data collection are supplied.
