@@ -5,6 +5,7 @@ prohibited use cases:
 
     1.  Users shall not attempt to inhibit the operations of the application by
         DoSing, DDoSing, or otherwise overloading server bandwidth.
-    2.  Users shall not use the application to harass or otherwise annoy otherwise
+        
+    2.  Users shall not use the application to harass or otherwise annoy other
         users. Doing so may result in exclusion from application services where
         possible.

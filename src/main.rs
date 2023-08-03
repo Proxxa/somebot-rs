@@ -2,12 +2,16 @@ pub(crate) mod commands;
 pub mod prelude;
 mod routes;
 
-use rocket::routes;
+use rocket::{routes, fs::{FileServer, Options}};
+use std::path::PathBuf;
 
 use crate::prelude::*;
 
 #[shuttle_runtime::main]
-async fn init(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> Result<PoiseRocketService, shuttle_runtime::Error> {
+async fn init(
+    #[shuttle_secrets::Secrets] secret_store: SecretStore,
+    #[shuttle_static_folder::StaticFolder] static_folder: PathBuf,
+) -> Result<PoiseRocketService, shuttle_runtime::Error> {
     // Get the discord token set in `Secrets.toml`
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
@@ -31,8 +35,12 @@ async fn init(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> Result<P
             })
         });
 
+    println!("\n\n\n{}\n\n\n", static_folder.display());
+
     let rocket: shuttle_rocket::RocketService = rocket::build()
-        .mount("/", routes![routes::index, routes::tos, routes::privacy_policy])
+        .mount("/tos", FileServer::new(static_folder.join("tos.txt"), Options::IndexFile))
+        .mount("/privacy", FileServer::new(static_folder.join("privacy_policy.txt"), Options::IndexFile))
+        .mount("/", routes![routes::index])
         .into();
 
     Ok(PoiseRocketService {
