@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-use std::{path::PathBuf, ffi::OsStr, fs::{OpenOptions, File}, ops::{DerefMut, Deref}, sync::atomic::Ordering, io::{Write, Seek}};
+use std::{path::PathBuf, ffi::OsStr, fs::{OpenOptions, File}, ops::{DerefMut, Deref}, io::{Write, Seek}};
 pub(super) type IoResult<T> = std::io::Result<T>;
 
 pub struct TempFile(pub File, pub PathBuf);
