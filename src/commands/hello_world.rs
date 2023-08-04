@@ -1,10 +1,8 @@
 use crate::prelude::*;
 
 /// A simple "Hello World" command.
-///
-/// I wonder if another line will show up.
 #[poise::command(slash_command)]
-pub async fn hello(ctx: Context<'_>) -> Result<(), Error> {
+pub async fn hello(ctx: Context<'_>) -> Result<()> {
     ctx.send(|reply| reply.ephemeral(true).content("Hello, World!"))
         .await?;
 

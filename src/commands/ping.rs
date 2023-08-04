@@ -4,7 +4,7 @@ use crate::prelude::*;
 
 /// A command for measuring response latency.
 #[poise::command(slash_command)]
-pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
+pub async fn ping(ctx: Context<'_>) -> Result<()> {
     let start = Instant::now();
 
     let rh = ctx.send(|reply| reply.content("Pinging...")).await?;

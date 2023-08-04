@@ -36,20 +36,21 @@ const NON_COMMITTAL_ANSWERS: &[&str] = &[
 const NON_COMMITTAL_COLOR: (u8, u8, u8) = (255, 255, 0);
 
 /// A simple 8ball command.
-///
-/// I wonder if another line will show up.
 #[poise::command(slash_command)]
-#[export_name = "8ball"]
 pub async fn _8ball(
     ctx: Context<'_>,
     #[description = "The question supplied to the bot. (Does nothing)"] question: String,
-) -> Result<(), Error> {
+) -> Result<()> {
+
+
     let mrand1: u128 = rand::random();
     let mrand2: u128 = rand::random();
+
+
     let (message_pool, embed_color) = match mrand1 % 3 {
         0 => (AFFIRMATIVE_ANSWERS, AFFIRMATIVE_COLOR),
         1 => (NEGATIVE_ANSWERS, NEGATIVE_COLOR),
-        2 => (NON_COMMITTAL_ANSWERS, NON_COMMITTAL_COLOR),
+        // 2 => (NON_COMMITTAL_ANSWERS, NON_COMMITTAL_COLOR),
         _ => (NON_COMMITTAL_ANSWERS, NON_COMMITTAL_COLOR), // This shouldn't really need to be here
     };
 
