@@ -1,2 +1,3 @@
 **/target
 Secrets*.toml
+src/commands/attachment.rs

@@ -41,11 +41,8 @@ pub async fn _8ball(
     ctx: Context<'_>,
     #[description = "The question supplied to the bot. (Does nothing)"] question: String,
 ) -> Result<()> {
-
-
     let mrand1: u128 = rand::random();
     let mrand2: u128 = rand::random();
-
 
     let (message_pool, embed_color) = match mrand1 % 3 {
         0 => (AFFIRMATIVE_ANSWERS, AFFIRMATIVE_COLOR),

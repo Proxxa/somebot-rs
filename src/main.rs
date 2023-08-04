@@ -1,6 +1,7 @@
 pub(crate) mod commands;
 pub mod prelude;
 mod routes;
+pub mod util;
 
 use rocket::fs::{FileServer, Options};
 use std::path::PathBuf;
@@ -11,19 +12,21 @@ use crate::prelude::*;
 async fn init(
     #[shuttle_secrets::Secrets] secret_store: SecretStore,
     #[shuttle_static_folder::StaticFolder] static_folder: PathBuf,
-) -> Result<PoiseRocketService, shuttle_runtime::Error> {
+) -> StdResult<PoiseRocketService, shuttle_runtime::Error> {
     // Get the discord token set in `Secrets.toml`
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
         .context("'DISCORD_TOKEN' was not found")?;
 
-    let framework = poise::Framework::builder()
+    let poise = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![commands::hello(), commands::ping(), {
-                let mut com = commands::_8ball();
-                com.name = String::from("8ball");
-                com
-            }],
+            commands: vec![
+                commands::hello(),
+                commands::ping(),
+                commands::_8ball().with_fn(|cmd| cmd.name = String::from("8ball")),
+                commands::resize(),
+                // commands::attach(),
+            ],
             ..Default::default()
         })
         .token(discord_token)
@@ -35,17 +38,15 @@ async fn init(
             })
         });
 
-    println!("\n\n\n{}\n\n\n", static_folder.display());
-
     let rocket: shuttle_rocket::RocketService = rocket::build()
-    .mount(
-        "/tos",
-        FileServer::new(static_folder.join("tos.txt"), Options::IndexFile).rank(1),
-    )
-    .mount(
-        "/privacy",
-        FileServer::new(static_folder.join("privacy_policy.txt"), Options::IndexFile).rank(1),
-    )
+        .mount(
+            "/tos",
+            FileServer::new(static_folder.join("tos.txt"), Options::IndexFile).rank(1),
+        )
+        .mount(
+            "/privacy",
+            FileServer::new(static_folder.join("privacy_policy.txt"), Options::IndexFile).rank(1),
+        )
         .mount(
             "/",
             FileServer::new(static_folder.join("public/index.html"), Options::IndexFile).rank(-999),
@@ -53,8 +54,5 @@ async fn init(
         .mount("/public", FileServer::from(static_folder.join("public")))
         .into();
 
-    Ok(PoiseRocketService {
-        poise: framework,
-        rocket,
-    })
+    Ok(PoiseRocketService { poise, rocket })
 }
