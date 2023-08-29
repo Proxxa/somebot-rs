@@ -53,4 +53,5 @@ fn install_magick() {
     // Manually drop here to keep file until now.
     drop(script);
 
+    
 }
