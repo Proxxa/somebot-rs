@@ -1,3 +1,6 @@
+PRIVACY POLICY
+Last updated August 1, 2023
+
 Some Bot currently does not collect data about its users.
 
 Whenever errors occur, error data is not logged. Instead, we ask that you contact us via Discord (@yorip)
