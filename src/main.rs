@@ -8,10 +8,13 @@ use std::path::PathBuf;
 
 use crate::prelude::*;
 
+lazy_static::lazy_static! {
+    static ref STATIC_FOLDER: PathBuf = PathBuf::from("./static");
+}
+
 #[shuttle_runtime::main]
 async fn init(
     #[shuttle_secrets::Secrets] secret_store: SecretStore,
-    #[shuttle_static_folder::StaticFolder] static_folder: PathBuf,
 ) -> StdResult<PoiseRocketService, shuttle_runtime::Error> {
     // Get the discord token set in `Secrets.toml`
     let discord_token = secret_store
@@ -41,17 +44,17 @@ async fn init(
     let rocket: shuttle_rocket::RocketService = rocket::build()
         .mount(
             "/tos",
-            FileServer::new(static_folder.join("tos.txt"), Options::IndexFile).rank(1),
+            FileServer::new(STATIC_FOLDER.join("tos.txt"), Options::IndexFile).rank(1),
         )
         .mount(
             "/privacy",
-            FileServer::new(static_folder.join("privacy_policy.txt"), Options::IndexFile).rank(1),
+            FileServer::new(STATIC_FOLDER.join("privacy_policy.txt"), Options::IndexFile).rank(1),
         )
         .mount(
             "/",
-            FileServer::new(static_folder.join("public/index.html"), Options::IndexFile).rank(-999),
+            FileServer::new(STATIC_FOLDER.join("public/index.html"), Options::IndexFile).rank(-999),
         )
-        .mount("/public", FileServer::from(static_folder.join("public")))
+        .mount("/public", FileServer::from(STATIC_FOLDER.join("public")))
         .into();
 
     Ok(PoiseRocketService { poise, rocket })
