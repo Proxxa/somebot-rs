@@ -28,7 +28,6 @@ async fn init(
                 commands::ping(),
                 commands::_8ball().with_fn(|cmd| cmd.name = String::from("8ball")),
                 commands::resize(),
-                // commands::attach(),
             ],
             ..Default::default()
         })

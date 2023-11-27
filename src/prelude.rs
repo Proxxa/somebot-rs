@@ -1,11 +1,12 @@
 pub use anyhow::Context as _;
+pub use anyhow::Error as Error;
 pub use poise::serenity_prelude as serenity;
 pub use serenity::model::prelude::Attachment;
 pub use shuttle_poise::ShuttlePoise;
 pub use shuttle_secrets::SecretStore;
 
-pub struct Data {} // User data, which is stored and accessible in all command invocations
-pub type Error = Box<dyn std::error::Error + Send + Sync>;
+/// User data, which is stored and accessible in all command invocations
+pub struct Data {} 
 pub type Context<'a> = poise::Context<'a, Data, Error>;
 pub type StdResult<T, E> = std::result::Result<T, E>;
 pub type Result<T> = StdResult<T, Error>;

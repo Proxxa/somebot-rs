@@ -13,8 +13,7 @@ use std::{
     sync::atomic::{AtomicUsize, Ordering},
 };
 
-
-
+/// Create a TempFile from a Poise Attachment
 pub async fn tmpfile_from_attachment(attach: Attachment) -> Result<TempFile> {
     let bytes: Vec<u8> = reqwest::get(attach.url)
         .await?
@@ -50,9 +49,10 @@ impl TryFrom<&[u8]> for TempFile {
     }
 }
 
+/// A custom Shuttle Runtime service that combines Poise and Rocket
 pub struct PoiseRocketService {
     pub poise:
-        FrameworkBuilder<Data, Box<(dyn std::error::Error + std::marker::Send + Sync + 'static)>>,
+        FrameworkBuilder<Data, Error>,
     pub rocket: shuttle_rocket::RocketService,
 }
 
@@ -74,10 +74,12 @@ impl shuttle_runtime::Service for PoiseRocketService {
 }
 
 #[derive(Debug)]
+/// A generic error that displays a string when formatted with `Display`.
 pub(crate) struct StringError(String);
 
 #[allow(dead_code)]
 impl StringError {
+    /// Create a new StringError
     pub fn new(string: impl AsRef<str>) -> Self {
         Self(string.as_ref().to_string())
     }
@@ -91,7 +93,12 @@ impl Display for StringError {
 
 impl std::error::Error for StringError {}
 
+/// Modify the value and return the modified form.
 pub trait With {
+
+    /// Execute a closure with a `&mut` to a copy/move of `self`.
+    /// 
+    /// Return the copied/moved `self`.
     fn with_fn(mut self, lambda: impl FnOnce(&mut Self)) -> Self
     where
         Self: Sized,
@@ -103,6 +110,10 @@ pub trait With {
 
 impl<T> With for T {}
 
+/// Execute the imagemagick command `mogrify` on the file at the supplied path
+/// with the supplied arguments.
+/// 
+/// Return command output.
 pub fn mogrify_file(path: &PathBuf, args: &[&str]) -> Result<Output> {
     let magick = Command::new("magick")
         .arg("mogrify")
@@ -111,9 +122,9 @@ pub fn mogrify_file(path: &PathBuf, args: &[&str]) -> Result<Output> {
         .output()?;
 
     if !magick.status.success() {
-        return Err(Box::new(StringError::new(
+        return Err(StringError::new(
             "An error occurred while modifying the image.",
-        )));
+        ).into());
     }
 
     Ok(magick)
