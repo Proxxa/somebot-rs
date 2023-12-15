@@ -7,23 +7,20 @@ use crate::prelude::*;
 pub async fn ping(ctx: Context<'_>) -> Result<()> {
     let start = Instant::now();
 
-    let rh = ctx.send(|reply| reply.content("Pinging...")).await?;
-
-    // To you unfortunate souls who see this:
-    // It's literally just waiting for Discord to say "yep! you responded."
-    rh.message().await?;
-
-    let elapsed = Instant::now().duration_since(start);
-
-    rh.edit(ctx, |reply| {
-        reply.content("").embed(|embed| {
-            embed
-                .title("Pong!")
-                .color((0, 255, 0))
-                .description(format!("**Response** latency: `{}ms`", elapsed.as_millis()))
+    ctx.send(|reply| reply.content("Pinging..."))
+        .await?
+        .into_message()
+        .await?
+        .to_owned()
+        .edit(ctx, |reply| {
+            reply.content("").embed(|embed| {
+                embed.title("Pong!").color((0, 255, 0)).description(format!(
+                    "**Response** latency: `{}ms`",
+                    start.elapsed().as_millis()
+                ))
+            })
         })
-    })
-    .await?;
+        .await?;
 
     Ok(())
 }

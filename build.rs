@@ -1,17 +1,17 @@
-use std::{process::Command, fs::OpenOptions, io::ErrorKind, env::temp_dir};
+use std::{env::temp_dir, fs::OpenOptions, io::ErrorKind, process::Command};
 
 const PATH: &'static str = concat!(env!("CARGO_MANIFEST_DIR"), "/magick_already_installed");
 const SCRIPT_LINK: &'static str =  "https://gist.githubusercontent.com/timoteostewart/16624088e656d336a2a862778788378a/raw/f529fba2c7d851932f1aa4b928c7c3fdf76021b5/i-imagemagick-latest.sh";
 
 fn main() {
     let _ = std::fs::remove_file(PATH);
-    
+
     println!("Checking if magick is installed...");
     match Command::new("magick").spawn() {
         Ok(_) => {
             println!("Magick installed!");
             let _ = OpenOptions::new().create_new(true).open(PATH);
-        },
+        }
         Err(e) => {
             if e.kind() == ErrorKind::NotFound {
                 println!("Not installed.");
@@ -26,7 +26,6 @@ fn main() {
 #[path = "./src/alltime_util.rs"]
 mod util;
 use util::*;
-
 
 use tokio::runtime::Runtime;
 macro_rules! block_future {
@@ -52,6 +51,4 @@ fn install_magick() {
 
     // Manually drop here to keep file until now.
     drop(script);
-
-    
 }

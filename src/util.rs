@@ -43,7 +43,8 @@ impl TryFrom<&[u8]> for TempFile {
             static ref ID: AtomicUsize = AtomicUsize::new(0);
         }
 
-        let path = std::env::temp_dir().join(format!("unknownfile{}", ID.fetch_add(1, Ordering::Relaxed)));
+        let path =
+            std::env::temp_dir().join(format!("unknownfile{}", ID.fetch_add(1, Ordering::Relaxed)));
 
         Self::with_data(&path, Vec::from(data))
     }
@@ -51,8 +52,7 @@ impl TryFrom<&[u8]> for TempFile {
 
 /// A custom Shuttle Runtime service that combines Poise and Rocket
 pub struct PoiseRocketService {
-    pub poise:
-        FrameworkBuilder<Data, Error>,
+    pub poise: FrameworkBuilder<Data, Error>,
     pub rocket: shuttle_rocket::RocketService,
 }
 
@@ -95,9 +95,8 @@ impl std::error::Error for StringError {}
 
 /// Modify the value and return the modified form.
 pub trait With {
-
     /// Execute a closure with a `&mut` to a copy/move of `self`.
-    /// 
+    ///
     /// Return the copied/moved `self`.
     fn with_fn(mut self, lambda: impl FnOnce(&mut Self)) -> Self
     where
@@ -112,7 +111,7 @@ impl<T> With for T {}
 
 /// Execute the imagemagick command `mogrify` on the file at the supplied path
 /// with the supplied arguments.
-/// 
+///
 /// Return command output.
 pub fn mogrify_file(path: &PathBuf, args: &[&str]) -> Result<Output> {
     let magick = Command::new("magick")
@@ -122,9 +121,7 @@ pub fn mogrify_file(path: &PathBuf, args: &[&str]) -> Result<Output> {
         .output()?;
 
     if !magick.status.success() {
-        return Err(StringError::new(
-            "An error occurred while modifying the image.",
-        ).into());
+        return Err(StringError::new("An error occurred while modifying the image.").into());
     }
 
     Ok(magick)
